@@ -54,10 +54,6 @@ int main(int argc, char *argv[]){
             matrix.push_back(row);
 
         }
-        else{
-             cerr<<"Unrecognized Term or file cannot be found"<<endl;
-             return 1;
-        }
     }
     inFS.close();
     //-------------------------READING IN THE STRING--------------------------
@@ -79,10 +75,22 @@ int main(int argc, char *argv[]){
     //-------------------Compare to accepted states set-----------------------
     vector<string> failedList;
     vector<string> acceptList;
+    unordered_set<string> acceptRepeats;
+    unordered_set<string> failRepeats;
     while(!itrStates.empty()){
         string currQ = itrStates.front();
-        if (acceptedStates.find(currQ) != acceptedStates.end())acceptList.push_back(currQ);     
-        else failedList.push_back(currQ);
+        if (acceptedStates.find(currQ) != acceptedStates.end()){
+            if(acceptRepeats.find(currQ) == acceptRepeats.end()){
+            acceptRepeats.insert(currQ);
+            acceptList.push_back(currQ);
+            }
+        }
+        else{
+            if(failRepeats.find(currQ) == failRepeats.end()){
+            failRepeats.insert(currQ);
+            failedList.push_back(currQ);
+            }
+        }
         itrStates.pop();
     }
     if(acceptList.empty()){
